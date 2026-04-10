@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}Book — {{ service.name }}{% endblock %}
+{% block content %}
+  <div class="row g-4">
+    <div class="col-lg-5">
+      {% include "components/service_card.html" with service=service %}
+      <div class="text-muted small mt-2">
+        Choose your appointment date and time, then share contact details so your stylist can reach you.
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="d-flex justify-content-between align-items-end mb-2">
+        <div>
+          <h1 class="h3 mb-1">Booking details</h1>
+          <div class="text-muted">Your booking will be “Pending” until the provider confirms it.</div>
+        </div>
+      </div>
+
+      <form method="post" class="card card-body">
+        {% csrf_token %}
+
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label" for="{{ form.date.id_for_label }}">Appointment date</label>
+            {{ form.date }}
+            {% if form.date.errors %}<div class="invalid-feedback d-block">{{ form.date.errors }}</div>{% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="{{ form.time.id_for_label }}">Appointment time</label>
+            {{ form.time }}
+            {% if form.time.errors %}<div class="invalid-feedback d-block">{{ form.time.errors }}</div>{% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="{{ form.contact_name.id_for_label }}">Full name</label>
+            {{ form.contact_name }}
+            {% if form.contact_name.errors %}<div class="invalid-feedback d-block">{{ form.contact_name.errors }}</div>{% endif %}
+          </div>
+          <div class="col-md-6">
+            <label class="form-label" for="{{ form.contact_phone.id_for_label }}">Phone</label>
+            {{ form.contact_phone }}
+            {% if form.contact_phone.errors %}<div class="invalid-feedback d-block">{{ form.contact_phone.errors }}</div>{% endif %}
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="{{ form.contact_email.id_for_label }}">Email (optional)</label>
+            {{ form.contact_email }}
+            {% if form.contact_email.errors %}<div class="invalid-feedback d-block">{{ form.contact_email.errors }}</div>{% endif %}
+          </div>
+          <div class="col-12">
+            <label class="form-label" for="{{ form.notes.id_for_label }}">Notes (optional)</label>
+            {{ form.notes }}
+            {% if form.notes.errors %}<div class="invalid-feedback d-block">{{ form.notes.errors }}</div>{% endif %}
+            <div class="form-text">Example: preferred style details, color references, or special requests.</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary mt-3">Confirm booking</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+

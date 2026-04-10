@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard — Servora{% endblock %}
+{% block content %}
+  <div class="container mt-2">
+    <h1 class="h3 mb-3">Admin Dashboard</h1>
+    <div class="row g-3">
+      <div class="col-md-3">
+        <div class="card shadow-sm h-100 border-0 rounded-3">
+          <div class="card-body text-center">
+            <h4 class="fw-bold">{{ users }}</h4>
+            <p class="mb-0">Users</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow-sm h-100 border-0 rounded-3">
+          <div class="card-body text-center">
+            <h4 class="fw-bold">{{ services }}</h4>
+            <p class="mb-0">Services</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow-sm h-100 border-0 rounded-3">
+          <div class="card-body text-center">
+            <h4 class="fw-bold">{{ bookings }}</h4>
+            <p class="mb-0">Bookings</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow-sm h-100 border-0 rounded-3">
+          <div class="card-body text-center">
+            <h4 class="fw-bold">{{ providers }}</h4>
+            <p class="mb-0">Providers</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

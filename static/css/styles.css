@@ -1,0 +1,172 @@
+.clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.auth-wrap {
+  background: radial-gradient(1200px circle at top left, rgba(13, 110, 253, 0.08), transparent 45%),
+    radial-gradient(900px circle at bottom right, rgba(25, 135, 84, 0.08), transparent 45%);
+  border-radius: 1rem;
+}
+
+.service-placeholder {
+  background: linear-gradient(135deg, rgba(13, 110, 253, 0.08), rgba(25, 135, 84, 0.08));
+}
+
+.service-card img {
+  background: #f8f9fa;
+}
+
+.service-card {
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  will-change: transform;
+}
+
+.service-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0.85rem 1.8rem rgba(0, 0, 0, 0.14);
+}
+
+.service-card .card-img-top {
+  transition: transform 300ms ease, filter 300ms ease;
+}
+
+.service-card:hover .card-img-top {
+  transform: scale(1.025);
+  filter: saturate(1.06);
+}
+
+.service-card .btn {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.service-card .btn:hover {
+  transform: translateY(-1px);
+}
+
+.services-grid > [class*="col-"] {
+  animation: fade-slide-up 460ms ease both;
+}
+
+.services-grid > [class*="col-"]:nth-child(1) {
+  animation-delay: 30ms;
+}
+.services-grid > [class*="col-"]:nth-child(2) {
+  animation-delay: 80ms;
+}
+.services-grid > [class*="col-"]:nth-child(3) {
+  animation-delay: 130ms;
+}
+.services-grid > [class*="col-"]:nth-child(4) {
+  animation-delay: 180ms;
+}
+.services-grid > [class*="col-"]:nth-child(5) {
+  animation-delay: 230ms;
+}
+.services-grid > [class*="col-"]:nth-child(6) {
+  animation-delay: 280ms;
+}
+
+.navbar .nav-link,
+.navbar-brand {
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.navbar .nav-link:hover,
+.navbar-brand:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.btn {
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+.notification-dropdown {
+  width: min(360px, 92vw);
+  max-height: 420px;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
+}
+
+.notification-list {
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.notification-card {
+  border-radius: 10px;
+  padding: 10px;
+  background: #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  transition: transform 160ms ease, background-color 160ms ease;
+}
+
+.notification-card:hover {
+  transform: translateY(-1px);
+  background-color: #f8fbff;
+}
+
+.category-btn {
+  border-radius: 20px;
+  padding: 6px 18px;
+}
+
+.category-btn.active {
+  background: #0d6efd;
+  color: #fff;
+}
+
+@keyframes fade-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Keep Bootstrap modals anchored to viewport (not transformed cards). */
+body.modal-open .service-card,
+body.modal-open .services-grid > [class*="col-"] {
+  transform: none !important;
+  animation: none !important;
+}
+
+.avatar-lg {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: inline-flex;
+}
+
+.avatar-fallback {
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #0d6efd, #6f42c1);
+}
+

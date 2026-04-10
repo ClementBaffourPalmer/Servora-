@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block title %}Edit Profile — Servora{% endblock %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-9">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+          <h1 class="h3 mb-1">Edit profile</h1>
+          <div class="text-muted">Keep your details up to date.</div>
+        </div>
+        <a class="btn btn-outline-secondary" href="{% url 'profile' %}">Back</a>
+      </div>
+
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <form method="post" enctype="multipart/form-data" novalidate>
+            {% csrf_token %}
+
+            {% if user_form.non_field_errors %}
+              <div class="alert alert-danger">{{ user_form.non_field_errors }}</div>
+            {% endif %}
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label" for="{{ user_form.first_name.id_for_label }}">First name</label>
+                {{ user_form.first_name }}
+                {% if user_form.first_name.errors %}<div class="invalid-feedback d-block">{{ user_form.first_name.errors }}</div>{% endif %}
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="{{ user_form.last_name.id_for_label }}">Last name</label>
+                {{ user_form.last_name }}
+                {% if user_form.last_name.errors %}<div class="invalid-feedback d-block">{{ user_form.last_name.errors }}</div>{% endif %}
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="{{ user_form.email.id_for_label }}">Email</label>
+                {{ user_form.email }}
+                {% if user_form.email.errors %}<div class="invalid-feedback d-block">{{ user_form.email.errors }}</div>{% endif %}
+              </div>
+              <div class="col-12">
+                <label class="form-label" for="{{ user_form.avatar.id_for_label }}">Avatar</label>
+                {{ user_form.avatar }}
+                {% if user_form.avatar.errors %}<div class="invalid-feedback d-block">{{ user_form.avatar.errors }}</div>{% endif %}
+              </div>
+            </div>
+
+            {% if profile_form %}
+              <hr class="my-4" />
+              <h2 class="h5 mb-3">Provider profile</h2>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ profile_form.display_name.id_for_label }}">Display name</label>
+                  {{ profile_form.display_name }}
+                  {% if profile_form.display_name.errors %}<div class="invalid-feedback d-block">{{ profile_form.display_name.errors }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ profile_form.phone.id_for_label }}">Phone</label>
+                  {{ profile_form.phone }}
+                  {% if profile_form.phone.errors %}<div class="invalid-feedback d-block">{{ profile_form.phone.errors }}</div>{% endif %}
+                </div>
+                <div class="col-12">
+                  <label class="form-label" for="{{ profile_form.bio.id_for_label }}">Bio</label>
+                  {{ profile_form.bio }}
+                  {% if profile_form.bio.errors %}<div class="invalid-feedback d-block">{{ profile_form.bio.errors }}</div>{% endif %}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ profile_form.whatsapp_number.id_for_label }}">WhatsApp</label>
+                  {{ profile_form.whatsapp_number }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ profile_form.instagram.id_for_label }}">Instagram</label>
+                  {{ profile_form.instagram }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ profile_form.snapchat.id_for_label }}">Snapchat</label>
+                  {{ profile_form.snapchat }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ profile_form.tiktok.id_for_label }}">TikTok</label>
+                  {{ profile_form.tiktok }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ profile_form.available_from.id_for_label }}">Available from</label>
+                  {{ profile_form.available_from }}
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label" for="{{ profile_form.available_to.id_for_label }}">Available to</label>
+                  {{ profile_form.available_to }}
+                </div>
+              </div>
+            {% endif %}
+
+            <div class="d-flex gap-2 justify-content-end mt-4">
+              <a class="btn btn-outline-secondary" href="{% url 'profile' %}">Cancel</a>
+              <button class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

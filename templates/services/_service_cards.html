@@ -1,0 +1,12 @@
+<div class="row g-3 services-grid">
+  {% for s in services %}
+    <div class="col-md-6 col-lg-4 service-card" data-category="{{ s.category.slug|default:'' }}">
+      {% include "components/service_card.html" with service=s %}
+    </div>
+  {% empty %}
+    <div class="col-12">
+      <div class="alert alert-info">No services found.</div>
+    </div>
+  {% endfor %}
+</div>
+

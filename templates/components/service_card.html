@@ -1,0 +1,63 @@
+{% load servora_tags %}
+<div class="card h-100 service-card">
+  <img
+    src="{% service_display_image_url service %}"
+    class="card-img-top object-fit-cover"
+    style="height: 190px"
+    alt="{{ service.name }}"
+    loading="lazy"
+  />
+
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start gap-2">
+      <h2 class="h5 card-title mb-1">{{ service.name }}</h2>
+      <span class="badge text-bg-secondary">{{ service.category.name }}</span>
+    </div>
+    <div class="text-muted small mb-2">
+      Provider: {{ service.provider.username }}
+    </div>
+    <div class="fw-semibold mb-2">GHS {{ service.price }}</div>
+    <p class="card-text text-muted clamp-2">{{ service.description|default:"No description yet." }}</p>
+  </div>
+
+  <div class="card-footer bg-white border-0 pt-0">
+    {% if user.is_authenticated %}
+      <a href="{% url 'service_detail' service.id %}" class="btn btn-outline-primary w-100">View Details</a>
+      {% if not user.is_provider %}
+        <button class="btn btn-success w-100 mt-2" data-bs-toggle="modal" data-bs-target="#bookingModal{{ service.id }}">
+          Book Appointment
+        </button>
+      {% endif %}
+    {% else %}
+      <a href="{% url 'login' %}?next={% url 'service_detail' service.id %}" class="btn btn-primary w-100">Login to Book</a>
+    {% endif %}
+  </div>
+</div>
+
+{% if user.is_authenticated and not user.is_provider %}
+  <div class="modal fade" id="bookingModal{{ service.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 shadow">
+        <form method="post" action="{% url 'create_booking' service.id %}">
+          {% csrf_token %}
+          <div class="modal-header">
+            <h5 class="modal-title">Book {{ service.name }}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <input type="date" name="date" class="form-control mb-2" required />
+            <input type="time" name="time" class="form-control mb-2" required />
+            <input type="text" name="contact_name" class="form-control mb-2" value="{{ user.get_full_name|default:user.username }}" placeholder="Full name" required />
+            <input type="text" name="contact_phone" class="form-control mb-2" placeholder="Phone number" required />
+            <input type="email" name="contact_email" class="form-control mb-2" value="{{ user.email }}" placeholder="Email (optional)" />
+            <textarea name="notes" class="form-control" placeholder="Optional note" rows="3"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success w-100">Confirm Booking</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endif %}
+

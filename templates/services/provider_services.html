@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Provider Services — Servora{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h1 class="h3 mb-1">My services</h1>
+      <div class="text-muted">Create services and manage availability.</div>
+    </div>
+    <a class="btn btn-primary" href="{% url 'provider_service_create' %}">New service</a>
+  </div>
+
+  <div class="row g-3">
+    {% for s in services %}
+      <div class="col-md-6 col-lg-4">
+        <div class="position-relative">
+          {% include "components/service_card.html" with service=s %}
+          <div class="p-3 pt-0">
+            <div class="d-grid gap-2">
+              <a class="btn btn-outline-primary" href="{% url 'provider_service_update' s.id %}">Edit</a>
+              <a class="btn btn-outline-secondary" href="{% url 'provider_service_availability' s.id %}">Availability</a>
+              <a class="btn btn-outline-danger" href="{% url 'provider_service_delete' s.id %}">Delete</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-info">You have no services yet.</div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock %}
+

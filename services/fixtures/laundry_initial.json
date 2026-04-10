@@ -1,0 +1,85 @@
+[
+  {
+    "model": "accounts.user",
+    "pk": 100,
+    "fields": {
+      "password": "!",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "demo_provider",
+      "first_name": "",
+      "last_name": "",
+      "email": "demo@servora.local",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-04-06T00:00:00Z",
+      "role": "provider",
+      "groups": [],
+      "user_permissions": []
+    }
+  },
+  {
+    "model": "accounts.providerprofile",
+    "pk": 100,
+    "fields": {
+      "user": 100,
+      "display_name": "Servora Demo Provider",
+      "phone": "",
+      "bio": "Demo provider account for Laundry business preview."
+    }
+  },
+  {
+    "model": "services.servicecategory",
+    "pk": 10,
+    "fields": { "name": "Laundry Services" }
+  },
+  {
+    "model": "services.service",
+    "pk": 1000,
+    "fields": {
+      "provider": 100,
+      "category": 10,
+      "name": "Wash & Fold",
+      "description": "Fresh wash, neatly folded and ready for pickup.",
+      "price": "80.00",
+      "image": "",
+      "image_url": "/static/images/services/hair-wash.jpg",
+      "is_active": true,
+      "created_at": "2026-04-06T00:00:00Z",
+      "updated_at": "2026-04-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "services.service",
+    "pk": 1001,
+    "fields": {
+      "provider": 100,
+      "category": 10,
+      "name": "Ironing Service",
+      "description": "Crisp ironing for shirts, uniforms, and everyday wear.",
+      "price": "70.00",
+      "image": "",
+      "image_url": "/static/images/services/hair-treatment.jpg",
+      "is_active": true,
+      "created_at": "2026-04-06T00:00:00Z",
+      "updated_at": "2026-04-06T00:00:00Z"
+    }
+  },
+  {
+    "model": "services.service",
+    "pk": 1002,
+    "fields": {
+      "provider": 100,
+      "category": 10,
+      "name": "Dry Cleaning",
+      "description": "Gentle professional cleaning for delicate garments.",
+      "price": "150.00",
+      "image": "",
+      "image_url": "/static/images/services/haircut.jpg",
+      "is_active": true,
+      "created_at": "2026-04-06T00:00:00Z",
+      "updated_at": "2026-04-06T00:00:00Z"
+    }
+  }
+]
+

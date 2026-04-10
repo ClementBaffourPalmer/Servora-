@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Booking — Servora{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h1 class="h3 mb-1">Booking detail</h1>
+      <div class="text-muted">{{ booking.service.name }} · {{ booking.date }} {{ booking.time }}</div>
+    </div>
+    <a class="btn btn-outline-secondary" href="{% url 'customer_dashboard' %}">Back</a>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-7">
+      <div class="card card-body">
+        <div class="d-flex justify-content-between align-items-start gap-3">
+          <div>
+            <div class="text-muted small">Status</div>
+            <div class="h5 mb-0">{{ booking.get_status_display }}</div>
+          </div>
+          {% if booking.status != 'cancelled' and booking.status != 'completed' %}
+            <a class="btn btn-outline-danger btn-sm" href="{% url 'cancel_booking' booking.id %}">Cancel booking</a>
+          {% endif %}
+        </div>
+        <hr />
+        <div class="row g-2">
+          <div class="col-md-6">
+            <div class="text-muted small">Provider</div>
+            <div class="fw-semibold">{{ booking.service.provider.username }}</div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-muted small">Category</div>
+            <div class="fw-semibold">{{ booking.service.category.name }}</div>
+          </div>
+          <div class="col-12">
+            <div class="text-muted small">Contact details</div>
+            <div class="fw-semibold">{{ booking.contact_name }} · {{ booking.contact_phone }}{% if booking.contact_email %} · {{ booking.contact_email }}{% endif %}</div>
+          </div>
+          <div class="col-12">
+            <div class="text-muted small">Notes</div>
+            <div>{{ booking.notes|default:"—" }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card card-body">
+        <div class="text-muted small mb-1">Service</div>
+        <div class="h5 mb-1">{{ booking.service.name }}</div>
+        <div class="text-muted mb-2">GHS {{ booking.service.price }}</div>
+        <a class="btn btn-outline-primary" href="{% url 'service_detail' booking.service.id %}">View service</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

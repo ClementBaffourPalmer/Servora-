@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+{% load servora_tags %}
+{% block title %}{{ service.name }} — Servora{% endblock %}
+{% block content %}
+  <div class="row g-4">
+    <div class="col-lg-5">
+      <div class="card">
+          <img
+            src="{% service_display_image_url service %}"
+            class="card-img-top object-fit-cover"
+            style="height: 320px"
+            alt="{{ service.name }}"
+            loading="lazy"
+          />
+        <div class="card-body">
+          <span class="badge text-bg-secondary">{{ service.category.name }}</span>
+          <h1 class="h3 mt-2 mb-1">{{ service.name }}</h1>
+          <div class="text-muted">Provider: {{ service.provider.username }}</div>
+          <div class="display-6 mt-3">GHS {{ service.price }}</div>
+          <div class="mt-2">
+            <span class="badge text-bg-light border">
+              {% if avg_rating %}{{ avg_rating|floatformat:1 }} ⭐{% else %}No ratings yet{% endif %}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-7">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="h5">About this service</h2>
+          <p class="text-muted mb-4">{{ service.description|default:"No description yet." }}</p>
+
+          <h3 class="h6">Available slots</h3>
+          {% if service.availability_slots.all %}
+            <div class="alert alert-light border d-flex justify-content-between align-items-center">
+              <div class="text-muted">Choose a slot on the booking page.</div>
+              {% if user.is_authenticated and not user.is_provider %}
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#bookingModal">Book Appointment</button>
+              {% elif not user.is_authenticated %}
+                <a class="btn btn-outline-primary" href="{% url 'login' %}?next={% url 'create_booking' service.id %}">Login to book</a>
+              {% else %}
+                <span class="text-muted small">Providers cannot book services.</span>
+              {% endif %}
+            </div>
+            <ul class="list-group">
+              {% for slot in service.availability_slots.all %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                  <span>{{ slot.date }} at {{ slot.time }}</span>
+                  <span class="badge text-bg-success">Available</span>
+                </li>
+              {% empty %}
+                <li class="list-group-item text-muted">No availability posted yet.</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            <div class="text-muted">No availability posted yet.</div>
+          {% endif %}
+
+          <div class="card mt-3">
+            <div class="card-body">
+              <h3 class="h6">Contact provider</h3>
+              <div class="d-grid gap-2">
+                {% with profile=provider_profile %}
+                  {% if profile.phone %}
+                    <a href="tel:{{ profile.phone }}" class="btn btn-outline-dark">Call Now</a>
+                  {% endif %}
+                  {% if profile.whatsapp_number %}
+                    <a href="https://wa.me/{{ profile.whatsapp_number }}" target="_blank" rel="noopener" class="btn btn-success">WhatsApp</a>
+                  {% endif %}
+                  {% if profile.instagram %}
+                    <a href="https://instagram.com/{{ profile.instagram }}" target="_blank" rel="noopener" class="btn btn-dark">Instagram</a>
+                  {% endif %}
+                  {% if profile.snapchat %}
+                    <a href="https://snapchat.com/add/{{ profile.snapchat }}" target="_blank" rel="noopener" class="btn btn-warning">Snapchat</a>
+                  {% endif %}
+                  {% if profile.tiktok %}
+                    <a href="https://tiktok.com/@{{ profile.tiktok }}" target="_blank" rel="noopener" class="btn btn-secondary">TikTok</a>
+                  {% endif %}
+                {% endwith %}
+              </div>
+            </div>
+          </div>
+
+          <div class="card mt-3">
+            <div class="card-body">
+              <h3 class="h6">Availability</h3>
+              {% with profile=provider_profile %}
+                {% if profile.available_from and profile.available_to %}
+                  <p class="mb-0">{{ profile.available_from }} - {{ profile.available_to }}</p>
+                {% else %}
+                  <p class="mb-0 text-muted">Provider has not set regular hours yet.</p>
+                {% endif %}
+              {% endwith %}
+            </div>
+          </div>
+
+          <div class="card mt-3">
+            <div class="card-body">
+              <h3 class="h6">Payment</h3>
+              {% if user.is_authenticated and not user.is_provider %}
+                <button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#paymentModal">
+                  Pay with Mobile Money
+                </button>
+                <small class="text-muted d-block mt-2">Secure mobile money checkout placeholder.</small>
+              {% elif not user.is_authenticated %}
+                <a href="{% url 'login' %}?next={% url 'service_detail' service.id %}" class="btn btn-outline-primary w-100">
+                  Login to pay
+                </a>
+                <small class="text-muted d-block mt-2">Login required to continue.</small>
+              {% else %}
+                <button class="btn btn-outline-secondary w-100" disabled>Providers cannot pay</button>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="card mt-3">
+            <div class="card-body">
+              <h3 class="h6">Ratings & Reviews</h3>
+              {% if user.is_authenticated and not user.is_provider %}
+                <form method="post" action="{% url 'submit_review' service.id %}">
+                  {% csrf_token %}
+                  <select name="rating" class="form-select mb-2">
+                    <option value="5">⭐⭐⭐⭐⭐</option>
+                    <option value="4">⭐⭐⭐⭐</option>
+                    <option value="3">⭐⭐⭐</option>
+                    <option value="2">⭐⭐</option>
+                    <option value="1">⭐</option>
+                  </select>
+                  <textarea name="comment" class="form-control mb-2" rows="3" placeholder="Share your experience"></textarea>
+                  <button class="btn btn-success" type="submit">Submit Review</button>
+                </form>
+              {% elif not user.is_authenticated %}
+                <p class="text-muted mb-2">Login to submit a review.</p>
+                <a href="{% url 'login' %}?next={% url 'service_detail' service.id %}" class="btn btn-outline-primary btn-sm">Login</a>
+              {% endif %}
+
+              <hr />
+              {% for review in reviews %}
+                <div class="card mb-2">
+                  <div class="card-body py-2">
+                    <strong>{{ review.customer.username }}</strong>
+                    <div>{{ review.rating }} ⭐</div>
+                    <p class="mb-0">{{ review.comment }}</p>
+                  </div>
+                </div>
+              {% empty %}
+                <p class="text-muted mb-0">No reviews yet.</p>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% if user.is_authenticated and not user.is_provider %}
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header">
+            <h2 class="modal-title h5" id="bookingModalLabel">Book Appointment</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="post" action="{% url 'create_booking' service.id %}">
+            <div class="modal-body">
+              {% csrf_token %}
+              <input type="date" name="date" class="form-control mb-2" required />
+              <input type="time" name="time" class="form-control mb-2" required />
+              <input type="text" name="contact_name" class="form-control mb-2" placeholder="Full name" value="{{ user.get_full_name|default:user.username }}" required />
+              <input type="text" name="contact_phone" class="form-control mb-2" placeholder="Phone number" required />
+              <input type="email" name="contact_email" class="form-control mb-2" placeholder="Email (optional)" value="{{ user.email }}" />
+              <textarea name="notes" class="form-control mb-2" placeholder="Optional note" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-success">Confirm Booking</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if user.is_authenticated and not user.is_provider %}
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header">
+            <h2 class="modal-title h5" id="paymentModalLabel">Mobile Money Payment</h2>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form method="post" action="{% url 'pay_service_mobile_money' service.id %}">
+            {% csrf_token %}
+            <div class="modal-body">
+              <div class="mb-2">
+                <label class="form-label">Amount (GHS)</label>
+                <input type="number" step="0.01" min="1" name="amount" class="form-control" value="{{ service.price }}" required />
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Network</label>
+                <select name="network" class="form-select" required>
+                  <option value="">Select network</option>
+                  <option value="mtn">MTN</option>
+                  <option value="telecel">Telecel</option>
+                  <option value="at">AT</option>
+                </select>
+              </div>
+              <div>
+                <label class="form-label">MoMo Number</label>
+                <input type="text" name="phone" class="form-control" placeholder="23324xxxxxxx" required />
+              </div>
+              <small class="text-muted d-block mt-2">Demo flow: payment is marked successful immediately.</small>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary">Confirm Payment</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endblock %}
+

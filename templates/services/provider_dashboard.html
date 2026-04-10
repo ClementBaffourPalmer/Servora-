@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load servora_tags %}
+{% block title %}Provider Dashboard — Servora{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h1 class="h3 mb-1">Provider dashboard</h1>
+      <div class="text-muted">Overview of your services and bookings.</div>
+    </div>
+    <a class="btn btn-primary" href="{% url 'provider_service_create' %}">New service</a>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-3">
+      <div class="card card-body">
+        <div class="text-muted small">Services</div>
+        <div class="display-6">{{ services_count }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body">
+        <div class="text-muted small">Total bookings</div>
+        <div class="display-6">{{ bookings_count }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body">
+        <div class="text-muted small">Pending</div>
+        <div class="display-6">{{ pending_count }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body border-primary-subtle">
+        <div class="text-muted small">Today's bookings</div>
+        <div class="display-6 text-primary">{{ count_today }}</div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card card-body border-success-subtle">
+        <div class="text-muted small">Total earnings</div>
+        <div class="display-6 text-success">GHS {{ total_earnings }}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex flex-wrap gap-2">
+    <a class="btn btn-outline-primary" href="{% url 'provider_services' %}"><i class="bi bi-grid me-1"></i> Manage services</a>
+    <a class="btn btn-outline-secondary" href="{% url 'provider_bookings' %}"><i class="bi bi-calendar-check me-1"></i> View bookings</a>
+  </div>
+
+  <div class="row g-3 mt-2">
+    <div class="col-lg-7">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h5 mb-0">Your services</h2>
+        <a class="small" href="{% url 'provider_services' %}">See all</a>
+      </div>
+      <div class="row g-3">
+        {% for s in services %}
+          <div class="col-md-6">
+            {% include "components/service_card.html" with service=s %}
+          </div>
+        {% empty %}
+          <div class="col-12">
+            <div class="alert alert-info">No services yet. Create one to start accepting bookings.</div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="col-lg-5">
+      <div class="card card-body mb-3">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h2 class="h5 mb-0">Notifications</h2>
+          <a class="small" href="{% url 'mark_notifications_read' %}?next={% url 'provider_dashboard' %}">Mark all read</a>
+        </div>
+        <div class="list-group list-group-flush">
+          {% for n in notifications %}
+            <div class="list-group-item px-0">
+              <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                  <div class="fw-semibold">{{ n.title }}</div>
+                  <div class="text-muted small">{{ n.message }}</div>
+                </div>
+                {% if not n.is_read %}<span class="badge text-bg-primary">New</span>{% endif %}
+              </div>
+            </div>
+          {% empty %}
+            <div class="text-muted">No notifications yet.</div>
+          {% endfor %}
+        </div>
+        {% if unread_count %}
+          <div class="small text-muted mt-2">{{ unread_count }} unread notification{{ unread_count|pluralize }}</div>
+        {% endif %}
+      </div>
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <h2 class="h5 mb-0">Today's bookings</h2>
+        <a class="small" href="{% url 'provider_bookings' %}">See all</a>
+      </div>
+      <div class="card">
+        <div class="list-group list-group-flush">
+          {% for b in bookings_today %}
+            <div class="list-group-item">
+              <div class="d-flex gap-3">
+                <img
+                  src="{% service_display_image_url b.service %}"
+                  alt=""
+                  class="rounded object-fit-cover"
+                  style="width:56px;height:56px;"
+                  loading="lazy"
+                />
+                <div class="flex-grow-1">
+                  <div class="d-flex justify-content-between align-items-start gap-2">
+                    <div class="fw-semibold">{{ b.service.name }}</div>
+                    <span class="badge {% if b.status == 'confirmed' %}text-bg-success{% elif b.status == 'cancelled' %}text-bg-danger{% else %}text-bg-warning{% endif %}">
+                      {% if b.status == 'confirmed' %}Accepted{% elif b.status == 'cancelled' %}Rejected{% else %}Pending{% endif %}
+                    </span>
+                  </div>
+                  <div class="text-muted small">{{ b.date }} {{ b.time }} · {{ b.contact_name }}</div>
+                  {% if b.status == 'pending' %}
+                    <div class="mt-2 d-flex gap-2">
+                      <a href="{% url 'accept_booking' b.id %}" class="btn btn-sm btn-success">Accept</a>
+                      <a href="{% url 'reject_booking' b.id %}" class="btn btn-sm btn-outline-danger">Reject</a>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="list-group-item text-muted">No bookings for today.</div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-header bg-white">
+          <h2 class="h6 mb-0">Recent Payments</h2>
+        </div>
+        <div class="table-responsive">
+          <table class="table mb-0 align-middle">
+            <thead>
+              <tr>
+                <th>Ref</th>
+                <th>Customer</th>
+                <th>Service</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in provider_payments %}
+                <tr>
+                  <td class="small">{{ p.reference }}</td>
+                  <td>{{ p.customer.username }}</td>
+                  <td>{{ p.service.name }}</td>
+                  <td class="fw-semibold">GHS {{ p.amount }}</td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="4" class="text-muted p-3">No payments yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block title %}Customer Dashboard — Servora{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h1 class="h3 mb-1">Dashboard</h1>
+      <div class="text-muted">Track booking statuses and manage your reservations.</div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-8">
+      <div class="card">
+        <div class="table-responsive">
+          <table class="table mb-0 align-middle">
+            <thead>
+              <tr>
+                <th>Service</th>
+                <th>Provider</th>
+                <th>Date/Time</th>
+                <th>Status</th>
+                <th class="text-end">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for b in bookings %}
+                <tr>
+                  <td>
+                    <div class="fw-semibold">{{ b.service.name }}</div>
+                    <div class="text-muted small">{{ b.service.category.name }}</div>
+                  </td>
+                  <td class="text-muted">{{ b.service.provider.username }}</td>
+                  <td>{{ b.date }} {{ b.time }}</td>
+                  <td>
+                    <span class="badge {% if b.status == 'confirmed' %}text-bg-success{% elif b.status == 'cancelled' %}text-bg-danger{% elif b.status == 'completed' %}text-bg-primary{% else %}text-bg-warning{% endif %}">
+                      {% if b.status == 'confirmed' %}Accepted{% elif b.status == 'cancelled' %}Rejected{% elif b.status == 'completed' %}Completed{% else %}Pending{% endif %}
+                    </span>
+                  </td>
+                  <td class="text-end">
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'customer_booking_detail' b.id %}">View</a>
+                    {% if b.status != 'cancelled' and b.status != 'completed' %}
+                      <a class="btn btn-sm btn-outline-danger" href="{% url 'cancel_booking' b.id %}">Cancel</a>
+                    {% else %}
+                      <span class="text-muted small">—</span>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="5" class="text-muted p-4">No bookings yet. Browse services to book your first one.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card mt-3">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <h2 class="h6 mb-0">Payment History</h2>
+          <span class="small text-muted">Total Spent: GHS {{ total_spent }}</span>
+        </div>
+        <div class="table-responsive">
+          <table class="table mb-0 align-middle">
+            <thead>
+              <tr>
+                <th>Reference</th>
+                <th>Service</th>
+                <th>Provider</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for p in payments %}
+                <tr>
+                  <td class="small">{{ p.reference }}</td>
+                  <td>{{ p.service.name }}</td>
+                  <td class="text-muted">{{ p.provider.username }}</td>
+                  <td>GHS {{ p.amount }}</td>
+                  <td><span class="badge text-bg-success">Paid</span></td>
+                </tr>
+              {% empty %}
+                <tr><td colspan="5" class="text-muted p-4">No payments yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="card card-body">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h2 class="h5 mb-0">Notifications</h2>
+          <a class="small" href="{% url 'mark_notifications_read' %}?next={% url 'customer_dashboard' %}">Mark all read</a>
+        </div>
+        <div class="list-group list-group-flush">
+          {% for n in notifications %}
+            <div class="list-group-item px-0">
+              <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                  <div class="fw-semibold">{{ n.title }}</div>
+                  <div class="text-muted small">{{ n.message }}</div>
+                </div>
+                {% if not n.is_read %}<span class="badge text-bg-primary">New</span>{% endif %}
+              </div>
+            </div>
+          {% empty %}
+            <div class="text-muted">No notifications yet.</div>
+          {% endfor %}
+        </div>
+        {% if unread_count %}
+          <div class="small text-muted mt-2">{{ unread_count }} unread notification{{ unread_count|pluralize }}</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% block title %}Profile — Servora{% endblock %}
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+      <h1 class="h3 mb-1">Profile</h1>
+      <div class="text-muted">Manage your personal details and activity.</div>
+    </div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-secondary" href="{% url 'mark_notifications_read' %}?next={% url 'profile' %}">Mark notifications read</a>
+      <a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit profile</a>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-lg-4">
+      <div class="card card-body">
+        <div class="text-center">
+          {% if user.avatar %}
+            <img src="{{ user.avatar.url }}" alt="Avatar" class="avatar-lg mb-3" />
+          {% else %}
+            <div class="avatar-lg avatar-fallback mb-3">{{ user.username|first|upper }}</div>
+          {% endif %}
+          <div class="h5 mb-0">{{ user.get_full_name|default:user.username }}</div>
+          <div class="text-muted small">{{ user.email|default:"No email yet" }}</div>
+        </div>
+        <hr />
+        <div class="d-flex justify-content-between small">
+          <span class="text-muted">Unread notifications</span>
+          <strong>{{ unread_count }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-8">
+      <div class="card card-body mb-3">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <div class="text-muted small">Username</div>
+            <div class="fw-semibold">{{ user.username }}</div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-muted small">Account type</div>
+            <div class="fw-semibold">{{ user.role|title }}</div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-muted small">First name</div>
+            <div class="fw-semibold">{{ user.first_name|default:"—" }}</div>
+          </div>
+          <div class="col-md-6">
+            <div class="text-muted small">Last name</div>
+            <div class="fw-semibold">{{ user.last_name|default:"—" }}</div>
+          </div>
+          <div class="col-12">
+            <div class="text-muted small">Email</div>
+            <div class="fw-semibold">{{ user.email|default:"—" }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="card card-body mb-3">
+        <h2 class="h5 mb-3">Provider details</h2>
+        {% if user.is_provider %}
+          <div class="mb-2">
+            <div class="text-muted small">Display name</div>
+            <div class="fw-semibold">{{ provider_profile.display_name|default:user.username }}</div>
+          </div>
+          <div class="mb-2">
+            <div class="text-muted small">Phone</div>
+            <div class="fw-semibold">{{ provider_profile.phone|default:"—" }}</div>
+          </div>
+          <div class="mb-2">
+            <div class="text-muted small">WhatsApp</div>
+            <div class="fw-semibold">{{ provider_profile.whatsapp_number|default:"—" }}</div>
+          </div>
+          <div class="mb-2">
+            <div class="text-muted small">Availability</div>
+            <div class="fw-semibold">
+              {% if provider_profile.available_from and provider_profile.available_to %}
+                {{ provider_profile.available_from }} - {{ provider_profile.available_to }}
+              {% else %}
+                —
+              {% endif %}
+            </div>
+          </div>
+          <div>
+            <div class="text-muted small">Bio</div>
+            <div>{{ provider_profile.bio|default:"—" }}</div>
+          </div>
+        {% else %}
+          <div class="text-muted">Switch to a provider account to manage services and bookings.</div>
+        {% endif %}
+      </div>
+      <div class="card card-body">
+        <h2 class="h5 mb-3">Recent notifications</h2>
+        <div class="list-group list-group-flush">
+          {% for n in notifications %}
+            <div class="list-group-item px-0">
+              <div class="d-flex justify-content-between align-items-start gap-2">
+                <div>
+                  <div class="fw-semibold">{{ n.title }}</div>
+                  <div class="text-muted small">{{ n.message }}</div>
+                </div>
+                {% if not n.is_read %}<span class="badge text-bg-primary">New</span>{% endif %}
+              </div>
+            </div>
+          {% empty %}
+            <div class="text-muted">No notifications yet.</div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

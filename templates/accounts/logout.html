@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Logout — Servora{% endblock %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-start gap-3">
+            <div class="rounded-circle bg-danger-subtle text-danger d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+              <i class="bi bi-box-arrow-right"></i>
+            </div>
+            <div class="flex-grow-1">
+              <h1 class="h4 mb-1">Log out of Servora?</h1>
+              <div class="text-muted">You can sign back in anytime.</div>
+            </div>
+          </div>
+
+          <div class="mt-4 d-flex flex-wrap gap-2 justify-content-end">
+            <a class="btn btn-outline-secondary" href="{{ next }}">Cancel</a>
+            <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmModal">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5">Confirm logout</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body text-muted">
+          Are you sure you want to log out?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Stay logged in</button>
+          <form method="post">
+            {% csrf_token %}
+            <button class="btn btn-danger">Yes, log out</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

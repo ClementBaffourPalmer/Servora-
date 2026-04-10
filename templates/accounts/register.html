@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Register — Servora{% endblock %}
+{% block content %}
+  <div class="auth-wrap py-3 py-lg-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-lg-10 col-xl-9">
+        <div class="card shadow-sm border-0 overflow-hidden">
+          <div class="row g-0">
+            <div class="col-lg-5 bg-dark text-white p-4 p-lg-5">
+              <div class="d-flex flex-column h-100">
+                <div>
+                  <div class="badge text-bg-light mb-3">Servora</div>
+                  <h1 class="h3 mb-2">Create your account</h1>
+                  <p class="text-white-50 mb-4">
+                    Book services in minutes or start offering your services as a provider.
+                  </p>
+                </div>
+                <div class="mt-auto">
+                  <div class="small text-white-50 mb-2">Already have an account?</div>
+                  <a class="btn btn-outline-light w-100" href="{% url 'login' %}">Sign in</a>
+                </div>
+              </div>
+            </div>
+            <div class="col-lg-7 p-4 p-lg-5">
+              <h2 class="h5 mb-3">Account details</h2>
+
+              {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+              {% endif %}
+
+              <form method="post" novalidate>
+                {% csrf_token %}
+
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <label class="form-label" for="{{ form.username.id_for_label }}">Username</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}<div class="invalid-feedback d-block">{{ form.username.errors }}</div>{% endif %}
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="{{ form.email.id_for_label }}">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<div class="invalid-feedback d-block">{{ form.email.errors }}</div>{% endif %}
+                    {% if form.email.help_text %}<div class="form-text">{{ form.email.help_text }}</div>{% endif %}
+                  </div>
+
+                  <div class="col-12">
+                    <label class="form-label" for="{{ form.role.id_for_label }}">Account type</label>
+                    {{ form.role }}
+                    {% if form.role.errors %}<div class="invalid-feedback d-block">{{ form.role.errors }}</div>{% endif %}
+                    {% if form.role.help_text %}<div class="form-text">{{ form.role.help_text }}</div>{% endif %}
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="{{ form.password1.id_for_label }}">Password</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}<div class="invalid-feedback d-block">{{ form.password1.errors }}</div>{% endif %}
+                    {% if form.password1.help_text %}<div class="form-text">{{ form.password1.help_text|safe }}</div>{% endif %}
+                  </div>
+
+                  <div class="col-md-6">
+                    <label class="form-label" for="{{ form.password2.id_for_label }}">Confirm password</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}<div class="invalid-feedback d-block">{{ form.password2.errors }}</div>{% endif %}
+                    {% if form.password2.help_text %}<div class="form-text">{{ form.password2.help_text|safe }}</div>{% endif %}
+                  </div>
+                </div>
+
+                <button class="btn btn-primary mt-4 w-100">Create account</button>
+                <div class="text-muted small mt-3">
+                  By creating an account, you agree to use Servora responsibly.
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

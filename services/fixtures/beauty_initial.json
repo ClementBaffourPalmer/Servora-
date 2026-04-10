@@ -1,0 +1,19 @@
+[
+  {
+    "model": "services.servicecategory",
+    "fields": { "name": "Nail Technician" }
+  },
+  {
+    "model": "services.servicecategory",
+    "fields": { "name": "Wig & Frontals" }
+  },
+  {
+    "model": "services.servicecategory",
+    "fields": { "name": "Hair Salon" }
+  },
+  {
+    "model": "services.servicecategory",
+    "fields": { "name": "Barbering" }
+  }
+]
+
