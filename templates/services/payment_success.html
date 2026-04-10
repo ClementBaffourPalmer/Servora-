@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Payment Success — Servora{% endblock %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+      <div class="card border-success">
+        <div class="card-body">
+          <h1 class="h4 text-success">Payment successful</h1>
+          <p class="text-muted">Your booking is confirmed.</p>
+          <ul class="list-group mb-3">
+            <li class="list-group-item d-flex justify-content-between"><span>Booking code</span><strong>{{ booking.booking_code }}</strong></li>
+            <li class="list-group-item d-flex justify-content-between"><span>Provider</span><strong>{{ booking.provider.username }}</strong></li>
+            <li class="list-group-item d-flex justify-content-between"><span>Service</span><strong>{{ booking.service.name }}</strong></li>
+            <li class="list-group-item d-flex justify-content-between"><span>Time</span><strong>{{ booking.date }} {{ booking.time }}</strong></li>
+            <li class="list-group-item d-flex justify-content-between"><span>Reference</span><strong>{{ booking.payment_reference }}</strong></li>
+          </ul>
+          <a class="btn btn-primary" href="{% url 'customer_dashboard' %}">Go to my bookings</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

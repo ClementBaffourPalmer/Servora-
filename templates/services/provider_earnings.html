@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Provider Earnings — Servora{% endblock %}
+{% block content %}
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+      <h1 class="h3 mb-1">Earnings</h1>
+      <div class="text-muted">Informational only. Funds are paid directly to your account.</div>
+    </div>
+    <a href="{% url 'provider_dashboard' %}" class="btn btn-outline-secondary">Back</a>
+  </div>
+  <div class="row g-3 mb-3">
+    <div class="col-md-6">
+      <div class="card card-body">
+        <div class="text-muted small">Total earnings</div>
+        <div class="display-6">GHS {{ total_earnings }}</div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card card-body">
+        <div class="text-muted small">Today's earnings</div>
+        <div class="display-6">GHS {{ todays_earnings }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="table-responsive">
+      <table class="table mb-0">
+        <thead><tr><th>Paid At</th><th>Code</th><th>Customer</th><th>Service</th><th>Amount</th></tr></thead>
+        <tbody>
+          {% for b in paid_bookings %}
+            <tr>
+              <td>{{ b.paid_at }}</td>
+              <td>{{ b.booking_code }}</td>
+              <td>{{ b.contact_name }}</td>
+              <td>{{ b.service.name }}</td>
+              <td>GHS {{ b.service.price }}</td>
+            </tr>
+          {% empty %}
+            <tr><td colspan="5" class="text-muted p-3">No paid bookings yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}
